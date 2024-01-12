@@ -6,17 +6,19 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SimpleTextWebServer {
+public class SimpleTextWebServer {	
     public static void main(String[] args) {
+		final int PORTO = 8080;
         try {
-            ServerSocket serverSocket = new ServerSocket(8080);
-            System.out.println("Servidor web simulado en execución. Escoitando no porto 8080...");
+            ServerSocket serverSocket = new ServerSocket(PORTO);
+            System.out.println("Servidor web simulado en execución. Escoitando no porto " + PORTO + "...");
 
-            ExecutorService executor = Executors.newFixedThreadPool(10);
+            //definimos pool de fíos como sucedería nun servidor web real            
+            ExecutorService poolClientes = Executors.newFixedThreadPool(10);
 
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-                executor.execute(new ClientHandler(clientSocket));
+                Socket clienteSocket = serverSocket.accept();
+                poolClientes.execute(new ClientHandler(clienteSocket));
             }
         } catch (IOException e) {
             e.printStackTrace();

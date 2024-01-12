@@ -6,26 +6,25 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class SimpleTextWebClient {
-	 public static void main(String[] args) {
-	        try {
-	            Socket socket = new Socket("localhost", 8080);
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	public static void main(String[] args) {
+		final int PORTO = 8080;
+		try {
+			Socket socket = new Socket("localhost", PORTO);
+			BufferedReader bufferReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-	            // Enviar solicitude HTTP GET ao servidor
-	            socket.getOutputStream().write("GET / HTTP/1.1\r\n\r\n".getBytes());
-	            socket.getOutputStream().flush();
+			// dende aquí envíanse as peticións "GET"
+			socket.getOutputStream().write("GET / HTTP/1.1\r\n\r\n".getBytes());
+			socket.getOutputStream().flush();
 
-	            // Ler e amosar a resposta do servidor
-	            String line;
-	            while ((line = reader.readLine()) != null) {
-	                System.out.println(line);
-	            }
-
-	            // Pechar recursos
-	            reader.close();
-	            socket.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
+			// lectura da resposta do servidor
+			String resposta;
+			while ((resposta = bufferReader.readLine()) != null) {
+				System.out.println(resposta);
+			}
+			bufferReader.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

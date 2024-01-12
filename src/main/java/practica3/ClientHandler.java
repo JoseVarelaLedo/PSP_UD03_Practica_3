@@ -6,48 +6,48 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;
+    private Socket clienteSocket;
 
-    public ClientHandler(Socket clientSocket) {
-        this.clientSocket = clientSocket;
+    public ClientHandler(Socket clienteSocket) {
+        this.clienteSocket = clienteSocket;
     }
 
     @Override
     public void run() {
         try {
-            Scanner scanner = new Scanner(clientSocket.getInputStream());
-            PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+            Scanner lectorSocket = new Scanner(clienteSocket.getInputStream());
+            PrintWriter printWriter = new PrintWriter(clienteSocket.getOutputStream(), true);
 
-            // Leer a solicitude HTTP do cliente (ignorando as demais cabeceiras)
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
+            
+            while (lectorSocket.hasNextLine()) {
+                String line = lectorSocket.nextLine();
                 if (line.isEmpty()) {
-                    break; // Fin da solicitude
+                    break; 
                 }
             }
-
-            // Simular acceso ao contido
+            
             ProcessBuilder processBuilder = new ProcessBuilder("echo", "¡Ola! Este é un servidor web simulado en Java.");
-            Process process = processBuilder.start();
+            Process proceso = processBuilder.start();
 
-            // Ler a saída do proceso
-            Scanner processScanner = new Scanner(process.getInputStream());
-            StringBuilder content = new StringBuilder();
-            while (processScanner.hasNextLine()) {
-                content.append(processScanner.nextLine()).append("\n");
+           
+            Scanner lecturaProceso = new Scanner(proceso.getInputStream());
+            StringBuilder contidoResposta = new StringBuilder();
+            while (lecturaProceso.hasNextLine()) {
+                contidoResposta.append(lecturaProceso.nextLine()).append("\n");
             }
-
-            // Enviar resposta HTTP ao cliente
-            writer.println("HTTP/1.1 200 OK");
-            writer.println("Content-Type: text/plain");
-            writer.println("Content-Length: " + content.length());
-            writer.println();
-            writer.print(content.toString());
-
-            // Pechar recursos
-            scanner.close();
-            writer.close();
-            clientSocket.close();
+            
+            
+            //engadimos o contido das respostas
+            printWriter.println("\n------------------\nResposta do servidor:\n-----------------");
+            printWriter.println("\"HTTP/1.1 200 OK\"");
+            printWriter.println("Contido.......");
+            printWriter.println("Lonxitude resposta: " + contidoResposta.length());
+            printWriter.println();
+            printWriter.print(contidoResposta.toString());
+          
+            lectorSocket.close();
+            printWriter.close();
+            clienteSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
